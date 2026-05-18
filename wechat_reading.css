@@ -1185,8 +1185,6 @@ input[type="checkbox"]:checked {
   align-items: flex-start !important;
   gap: 4px !important;
   font-size: 0 !important;
-  margin-top: 20px;
-  margin-bottom: 30px;
 }
 
 .mes_reasoning_header_title::before {
