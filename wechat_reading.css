@@ -1,0 +1,1802 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 【美化名称】微信读书摘录风格 / WeRead Excerpt Style (SmartTheme 自适应版)
+ * 【设计理念】将AI对话转化为文学摘录体验，静谧、高雅、知性，深度融合酒馆原生主题色
+ * 【原始设计】基于微信读书摘录卡片样式
+ * 【酒馆适配】vessel (Discord: vessel)
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * 【致谢与参考列表】
+ * 1. 感谢 @墨千尾 (Discord: @这对吗/inkfoxxxx) 的拼好码CSS十大模块结构框架；
+ * 2. 感谢 @camellia 的顶栏图标类名简化写法；
+ * 3. 感谢 @Nakari 的头像布局绝对定位代码参考；
+ * 4. 感谢 @珍珠 的输入框顶部边框修复代码参考；
+ * 5. 感谢 @chiyuki1 的全版本UI类名图标渐变色兼容方案；
+ * 6. 感谢 @icedream_03663 的SillyTavern UI类名参考手册；
+ * 7. 感谢 匿名（原帖已销号）的开屏页背景与齿轮替换逻辑参考；
+ * 8. 感谢 @labyrthson 的隐藏开屏Logo代码参考；
+ * 9. 感谢 @blue_0310 的顶部导航栏和聊天界面文本输入区域上边缘缝隙处理代码参考；
+ * 10. 感谢 @_nak.a.ri 的教程：输入框去底色、滑动条与勾选框自定义UI逻辑及 mask-image 变量跟随思路参考；
+ * 11. 感谢 @tenplustwo_equalto_12 的删除消息时的勾选选中样式代码参考；
+ * 12. 感谢 @formula_kelly 的左侧边栏预设条目精确字体与背景样式代码参考；
+ * 13. 感谢 @formula_kelly 的扩展面板/设置区按钮/多选标签样式代码参考；
+ * 14. 感谢 用户提供 的翻页按钮·自带清场终极补丁框架代码；
+ * 15. 感谢 @fangyan0541 提供的移除按钮组阴影逻辑；
+ * 16. 感谢 @mayonnaise58 提供的编辑按钮类名定位思路；
+
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* 先导篇：字体导入                                                                  */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+/*
+ * 🖊️MODIFIED: 根据用户要求，引入新正文字体 ChillHuoSong_F
+ */
+@import url("https://fontsapi.zeoseven.com/875/main/result.css");
+
+/* Noto Serif SC - 用于界面文字，保留原设计字体 */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700;900&display=swap");
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 一、全局控制 =====                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ===== 高频自定义文案 ===== */
+  --自定义输入框文字: "ℳℯℯ𝓉 𝓎ℴ𝓊 𝓁𝒾𝓀ℯ 𝓉𝒽ℯ 𝓌𝒾𝓃𝒹.";
+  --自定义加载更多信息文案: "翻阅更多篇章";
+
+  /* ===== 字体变量 ===== */
+  --wx-font-serif: "Noto Serif SC", serif;
+
+  /*
+   * 🖊️MODIFIED: 替换正文字体变量为新引入的字体 ChillHuoSong_F
+   * 该变量仅应用于 mes_text 及其子元素，从而完美实现“只改正文部分”的需求。
+   */
+  --wx-font-content: "ChillHuoSong_F", "Noto Serif SC", serif;
+
+  /* ===== 正文排版自定义参数 ===== */
+  --wx-content-font-size: --fontScale;
+  --wx-content-line-height: 1.8;
+  --wx-content-paragraph-spacing: 0.8em;
+
+  /* ===== 色彩变量 ===== */
+  /* 主要文本颜色 (正文、已点亮的UI、标题等) */
+  --wx-text-primary: var(--SmartThemeBodyColor);
+  --wx-text-content: var(--SmartThemeBodyColor);
+
+  /* 全局次要文本/未激活UI颜色。这里控制了：未点开的UI图标、三元素、思维链修饰符、Swipe按钮等。 */
+  --wx-text-secondary: var(--SmartThemeEmColor);
+
+  /* 强调色/斜体色 */
+  --wx-text-tertiary: var(--SmartThemeEmColor);
+
+  /* 分割线/边框颜色 */
+  --wx-divider: var(--SmartThemeBorderColor);
+
+  /* ===== 间距变量 ===== */
+  --wx-card-padding-y: 40px;
+  --wx-card-padding-x: 16px;
+  --wx-card-radius: 4px;
+  --wx-avatar-size: 36px;
+
+  /* ===== 思维链自定义文案 ===== */
+  --wx-reasoning-quote: "/ 我给你一个从未有过信仰的人的忠诚。";
+  --wx-reasoning-author: "博尔赫斯";
+
+  /* ===== 自定义作者/出处变量 ===== */
+  --wx-char-source-label: "摘录于";
+  --wx-char-author: "AI的絮语";
+  --wx-char-tag: "# 对话录";
+  --wx-user-source-label: "/ 你是人间的四月天";
+  --wx-user-author: "林徽因";
+  --wx-user-tag: "";
+
+  /* ===== 启动页自定义诗句 ===== */
+  --wx-splash-poem: "借我后天长成的先天，\A 借我变如不曾改变。\A 借我素淡的世故和明白的愚，\A 借我可预知的险。\A \A 《借我》\A 樊小纯";
+
+  /* ===== 阴影变量 ===== */
+  --wx-shadow: 0 20px 40px var(--SmartThemeShadowColor);
+}
+
+/* 定义全局字体 (保持不变) */
+body {
+  font-family: "Noto Serif SC", serif !important;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* 定义全局弹出面板主色调 */
+.drawer-content {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border-color: var(--SmartThemeBorderColor) !important;
+}
+
+#table_drawer_content {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border-color: var(--SmartThemeBorderColor) !important;
+}
+
+.options-content {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border-color: var(--SmartThemeBorderColor) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 附加模块：开屏页诗集化定制 =====                                            */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* 隐藏启动页的 Logo 图片 */
+.splash-logo {
+  display: none !important;
+}
+
+/* 重构开屏页容器，让背景颜色跟随聊天区背景色 */
+#preloader {
+  position: fixed !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 999999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: var(--SmartThemeChatTintColor) !important;
+  background-image: none !important;
+  backdrop-filter: blur(10px) !important;
+  opacity: 1;
+}
+
+/* 重构 loading 齿轮容器 */
+#load-spinner {
+  transition: all var(--animation-duration-2x) ease-out !important;
+  opacity: 1 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: none !important;
+}
+
+/* 彻底隐藏齿轮图标 */
+#load-spinner::before,
+#load-spinner svg,
+#load-spinner img {
+  display: none !important;
+}
+
+/* 诗句呼吸动画 */
+@keyframes poem-breathe {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+#load-spinner::after {
+  content: var(--wx-splash-poem) !important;
+  display: block !important;
+  font-family: var(--wx-font-content) !important;
+  font-size: 1.1rem !important;
+  line-height: 2.2 !important;
+  color: var(--SmartThemeBodyColor) !important;
+  white-space: pre !important;
+  text-align: center !important;
+  letter-spacing: 0.15em !important;
+  animation: poem-breathe 4s infinite ease-in-out !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 二、顶栏 =====                                                              */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* --- 顶栏背景及圆角 --- */
+#top-settings-holder {
+  background-color: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  /* 去除UI顶栏阴影 */
+  box-shadow: none !important;
+  border-radius: var(--wx-card-radius);
+}
+
+/* 确保父容器圆角 */
+#top-bar {
+  border-radius: var(--wx-card-radius) !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  height: 30px !important;
+}
+
+/* 顶栏图标美化 */
+#leftNavDrawerIcon::before,
+#API-status-top::before,
+#advanced-formatting-button .drawer-icon::before,
+#WIDrawerIcon::before,
+#user-settings-button .drawer-icon::before,
+#logo_block .drawer-icon::before,
+#backgrounds-drawer-toggle .drawer-icon::before,
+#extensions-settings-button .drawer-icon::before,
+#table_drawer_icon::before,
+#persona-management-button .drawer-icon::before,
+#rightNavDrawerIcon::before,
+#top-settings-holder .drawer-icon::before {
+  content: '✧' !important;
+  font-family: sans-serif !important;
+  font-size: 20px !important;
+  display: inline-block;
+  vertical-align: middle;
+  transform: rotate(0deg) !important;
+  color: var(--wx-text-secondary);
+  transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+#leftNavDrawerIcon:hover::before,
+#API-status-top:hover::before,
+#advanced-formatting-button .drawer-icon:hover::before,
+#WIDrawerIcon:hover::before,
+#user-settings-button .drawer-icon:hover::before,
+#logo_block .drawer-icon:hover::before,
+#backgrounds-drawer-toggle .drawer-icon:hover::before,
+#extensions-settings-button .drawer-icon:hover::before,
+#table_drawer_icon:hover::before,
+#persona-management-button .drawer-icon:hover::before,
+#rightNavDrawerIcon:hover::before,
+#top-settings-holder .drawer-icon:hover::before {
+  transform: scale(1.15) !important;
+  color: var(--wx-text-primary);
+}
+
+#leftNavDrawerIcon.openIcon::before,
+#API-status-top.openIcon::before,
+#advanced-formatting-button .drawer-icon.openIcon::before,
+#WIDrawerIcon.openIcon::before,
+#user-settings-button .drawer-icon.openIcon::before,
+#logo_block .drawer-icon.openIcon::before,
+#backgrounds-drawer-toggle .drawer-icon.openIcon::before,
+#extensions-settings-button .drawer-icon.openIcon::before,
+#table_drawer_icon.openIcon::before,
+#persona-management-button .drawer-icon.openIcon::before,
+#rightNavDrawerIcon.openIcon::before,
+#top-settings-holder .drawer-icon.openIcon::before {
+  content: '✦' !important;
+  color: var(--wx-text-primary) !important;
+  transform: scale(1.1) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 三、底栏与全局输入框样式 =====                                              */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#form_sheld {
+  margin: 0 !important;
+}
+
+/* --- 底栏背景及圆角 --- */
+#send_form {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  /* 去除底栏阴影 */
+  box-shadow: none !important;
+  border-radius: var(--wx-card-radius) !important;
+  padding: 6px 10px !important;
+}
+
+/* 移除所有输入框的灰色背景，智能跟随所在面板底色 */
+input:not(input[type="range"], input[type='checkbox'], input[type='radio']),
+select,
+textarea,
+.text_pole {
+  background-color: transparent !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  color: var(--SmartThemeBodyColor) !important;
+}
+
+/* 输入框聚焦效果 */
+input:focus, select:focus, textarea:focus, .text_pole:focus {
+  border-color: var(--SmartThemeBodyColor) !important;
+  outline: none !important;
+}
+
+/* 主聊天输入框专属定制 */
+#send_textarea {
+  border-radius: var(--wx-card-radius) !important;
+  background-color: transparent !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  font-family: var(--wx-font-serif) !important;
+  font-size: 1rem !important;
+  color: var(--SmartThemeBodyColor) !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.05em !important;
+  clip-path: none !important;
+  padding: 6px 10px !important;
+  min-height: 36px !important;
+}
+
+#send_textarea:focus {
+  border-color: var(--SmartThemeBodyColor) !important;
+  outline: none !important;
+}
+
+/* --- 底栏图标美化 --- */
+#send_form [class*="fa-"]::before {
+  font-size: 18px;
+  color: var(--wx-text-secondary);
+  transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+#send_form [class*="fa-"]:hover::before {
+  color: var(--wx-text-primary);
+  transform: scale(1.1);
+}
+
+/* 发送按钮特殊样式 */
+#send_but::before {
+  color: var(--wx-text-primary) !important;
+}
+
+#send_but:hover::before {
+  color: var(--wx-text-content) !important;
+}
+
+/* 停止按钮 */
+#mes_stop i::before {
+  color: var(--wx-text-secondary);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 四、聊天区域 =====                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* --- 4.1 聊天区域背景透明化 --- */
+#chat {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* --- 4.2 聊天气泡（mes）- 微信读书摘录卡片风格 --- */
+.mes {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  background-color: var(--SmartThemeChatTintColor) !important;
+  border-radius: var(--wx-card-radius) !important;
+  /* 去除卡片阴影 */
+  box-shadow: none !important;
+  padding: var(--wx-card-padding-y) var(--wx-card-padding-x) !important;
+  border: none !important;
+  position: relative !important;
+  font-family: var(--wx-font-serif) !important;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease !important;
+
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 16px !important;
+}
+
+.mes:hover {
+  /* 去除卡片悬停阴影 */
+  box-shadow: none !important;
+}
+
+.mes.last_mes {
+  margin-bottom: 0 !important;
+}
+
+/* 删除消息时的选中样式 */
+.mes.selected {
+    background-color: var(--SmartThemeQuoteColor) !important;
+}
+
+.mes.selected .mes_text {
+    background-color: transparent !important;
+    color: var(--SmartThemeBodyColor) !important;
+}
+
+/* --- 4.2.1 重新设计 mesAvatarWrapper 与三元素布局 --- */
+.mes .mesAvatarWrapper {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important; /* 确保不遮挡正文复制和点击交互 */
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important; /* 让内部文档流元素（楼层/计数等）自动沉底 */
+
+  gap: 4px !important;
+  box-sizing: border-box !important;
+  padding: var(--wx-card-padding-y) var(--wx-card-padding-x) !important;
+  margin: 0 !important;
+  order: 0 !important;
+  z-index: 5 !important;
+}
+
+.mes .mesAvatarWrapper > * {
+  pointer-events: auto !important;
+}
+
+.mes .mesAvatarWrapper .avatar {
+  position: absolute !important;
+  top: var(--wx-card-padding-y) !important;
+  left: var(--wx-card-padding-x) !important;
+  width: var(--wx-avatar-size) !important;
+  height: var(--wx-avatar-size) !important;
+  min-width: var(--wx-avatar-size) !important;
+  min-height: var(--wx-avatar-size) !important;
+  max-width: var(--wx-avatar-size) !important;
+  max-height: var(--wx-avatar-size) !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mes .mesAvatarWrapper .avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+.mes .mesAvatarWrapper .mesIDDisplay,
+.mes .mesAvatarWrapper .mes_timer,
+.mes .mesAvatarWrapper .tokenCounterDisplay {
+  display: block !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-bottom: 2px !important; /* 稍作间距，避免与底部落款重叠 */
+  font-family: var(--wx-font-serif) !important;
+  font-size: 0.75rem !important;
+  font-weight: 300 !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.05em !important;
+  text-align: left !important;
+}
+
+.mes[is_user="true"] .mesAvatarWrapper .mes_timer {
+  display: none !important;
+}
+
+.mes .mesAvatarWrapper .mesIDDisplay::before {
+  content: "第 " !important;
+}
+.mes .mesAvatarWrapper .mesIDDisplay::after {
+  content: " 章" !important;
+}
+
+.mes .mesAvatarWrapper .mes_timer::before {
+  content: "已连续阅读 " !important;
+}
+
+.mes .mesAvatarWrapper .tokenCounterDisplay::before {
+  content: "总阅读 " !important;
+}
+
+/* --- 4.2.2 消息内容块样式 --- */
+.mes .mes_block {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  padding-bottom: 60px !important; /* 为绝对定位沉底的蒙层三元素留出足够空间 */
+  order: 1 !important;
+  position: static !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.mes .mes_block > * {
+  order: 50 !important;
+}
+
+/* --- 4.2.3 头部区域 --- */
+.mes .mes_block .ch_name {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 0 !important;
+  margin-top: calc(var(--wx-avatar-size) + 12px) !important;
+  padding-top: 0 !important;
+  padding-bottom: 20px !important;
+  margin-bottom: 24px !important;
+  border-bottom: 1px solid var(--SmartThemeBorderColor) !important;
+  order: 1 !important;
+}
+
+.mes .mes_block .ch_name::after,
+.mes .mes_block .ch_name::before {
+  display: none !important;
+}
+
+.mes .mes_block .ch_name > * {
+  order: 10 !important;
+}
+
+.mes .mes_block .ch_name .name_text {
+  display: block !important;
+  width: 100% !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  color: var(--wx-text-primary) !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.4 !important;
+  order: 1 !important;
+}
+
+.mes .mes_block .ch_name .timestamp {
+  display: block !important;
+  width: 100% !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 300 !important;
+  font-size: 0.75rem !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  order: 2 !important;
+}
+
+.mes .mes_block .ch_name .timestamp::before {
+  content: '摘录于 ' !important;
+}
+
+.mes .mes_block > .timestamp {
+  display: block !important;
+  width: 100% !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 300 !important;
+  font-size: 0.75rem !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.4 !important;
+  padding-left: 0 !important;
+  margin-bottom: 24px !important;
+  border-bottom: 1px solid var(--SmartThemeBorderColor) !important;
+  padding-bottom: 20px !important;
+  box-sizing: border-box !important;
+  order: 2 !important;
+}
+
+.mes .mes_block > .timestamp::before {
+  content: '摘录于 ' !important;
+}
+
+/* --- 4.2.4 正文内容样式 --- */
+.mes .mes_block .mes_text {
+  display: flex !important;
+  flex-direction: column !important;
+  /* 此处挂载了更新后的 --wx-font-content 变量 */
+  font-family: var(--wx-font-content) !important;
+  font-weight: normal !important; /* 确保字重为 normal */
+  font-size: var(--wx-content-font-size) !important;
+  line-height: var(--wx-content-line-height) !important;
+  color: var(--SmartThemeBodyColor) !important;
+  letter-spacing: 0.05em !important;
+  text-align: justify !important;
+  white-space: pre-wrap !important;
+  padding: 0 !important;
+  width: 100% !important;
+  order: 2 !important;
+}
+
+.mes .mes_text > * {
+  order: 0 !important;
+}
+
+.mes .mes_text p {
+  font-family: var(--wx-font-content) !important;
+  font-weight: normal !important;
+  font-size: var(--wx-content-font-size) !important;
+  line-height: var(--wx-content-line-height) !important;
+  margin-bottom: var(--wx-content-paragraph-spacing) !important;
+  color: var(--SmartThemeBodyColor) !important;
+  letter-spacing: 0.05em !important;
+}
+
+.mes .mes_text em,
+.mes .mes_text i {
+  font-style: italic !important;
+  color: var(--SmartThemeEmColor) !important;
+}
+
+.mes .mes_text q {
+  color: var(--SmartThemeQuoteColor) !important;
+  quotes: """ """ "'" "'" !important;
+}
+
+.mes .mes_text blockquote {
+  border-left: 2px solid var(--SmartThemeBorderColor) !important;
+  padding-left: 16px !important;
+  margin: 16px 0 !important;
+  color: var(--SmartThemeQuoteColor) !important;
+  font-style: italic !important;
+}
+
+/* 将 pre code 的字体更改为与正文一致 */
+.mes .mes_text pre {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  border-radius: var(--wx-card-radius) !important;
+  padding: 16px !important;
+  margin: 16px 0 !important;
+  overflow-x: auto !important;
+}
+
+.mes .mes_text pre code {
+  font-family: var(--wx-font-content) !important;
+  font-weight: normal !important;
+  color: var(--SmartThemeBodyColor) !important;
+  background: transparent !important;
+}
+
+/* 将行内 code 的字体更改为与正文一致，并添加浅色底色 */
+.mes .mes_text :not(pre) > code {
+  font-family: var(--wx-font-content) !important;
+  font-weight: normal !important;
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  padding: 2px 6px !important;
+  border-radius: 3px !important;
+  color: var(--SmartThemeBodyColor) !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+}
+
+.mes .mes_text strong {
+  font-weight: 700 !important;
+  color: var(--SmartThemeBodyColor) !important;
+}
+
+.mes .mes_text u {
+  text-decoration: underline !important;
+  text-decoration-color: var(--SmartThemeUnderlineColor) !important;
+  text-underline-offset: 4px !important;
+}
+
+/* --- 4.2.5 底部操作按钮区域 --- */
+.mes .mes_block .mes_buttons {
+  display: none !important;
+  order: 3 !important;
+}
+
+.mes:hover .mes_buttons {
+  display: flex !important;
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  border-radius: var(--wx-card-radius) !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 2px 8px var(--SmartThemeShadowColor) !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+  z-index: 10 !important;
+
+  transform: translateZ(0) !important;
+  will-change: transform, opacity !important;
+
+  border: none !important;
+  outline: none !important;
+  max-width: calc(100% - 20px) !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+
+.mes:hover .mes_buttons::-webkit-scrollbar {
+  display: none !important;
+}
+
+.mes:hover .mes_buttons .extraMesButtons {
+  flex-wrap: nowrap !important;
+}
+
+.mes:hover .mes_buttons:hover {
+  opacity: 1 !important;
+}
+
+.mes_button, .extraMesButtons > div, .extraMesButtonsHint {
+  filter: drop-shadow(0px 0px 0px transparent) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease !important;
+  color: var(--wx-text-secondary) !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+.mes_button:hover, .extraMesButtons > div:hover, .extraMesButtonsHint:hover {
+  color: var(--wx-text-primary) !important;
+  transform: scale(1.1);
+}
+
+.mes_edit::before {
+  content: '\f52d' !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.mes_button.open_table_by_id {
+  font-size: 0 !important;
+  color: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+.mes_button.open_table_by_id::before {
+  content: '表' !important;
+  font-size: 14px !important;
+  color: var(--wx-text-secondary) !important;
+  transition: color 0.2s ease !important;
+}
+.mes_button.open_table_by_id:hover::before {
+  color: var(--wx-text-primary) !important;
+}
+
+/* --- 4.2.6 底部"作者/出处"区域 --- */
+.mes .mes_text {
+  padding-bottom: 20px !important;
+}
+
+.mes[is_user="false"]::after {
+  content: var(--wx-char-source-label) !important;
+  display: block !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 300 !important;
+  font-size: 0.85rem !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.04em !important;
+  position: absolute !important;
+  bottom: calc(var(--wx-card-padding-y) + 24px) !important;
+  left: var(--wx-card-padding-x) !important;
+}
+
+.mes[is_user="false"] .mes_text::after {
+  content: var(--wx-char-author) "  " var(--wx-char-tag) !important;
+  display: block !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 900 !important;
+  font-size: 1.2rem !important;
+  color: var(--wx-text-primary) !important;
+  letter-spacing: 0.02em !important;
+  margin-top: 48px !important;
+  order: 99 !important;
+}
+
+.mes[is_user="false"]:has(.mes_reasoning_details)::after {
+  display: none !important;
+}
+
+.mes[is_user="false"]:has(.mes_reasoning_details) .mes_text::after {
+  display: none !important;
+}
+
+.mes[is_user="true"]::after {
+  display: none !important;
+}
+.mes[is_user="true"] .mes_text::after {
+  display: none !important;
+}
+
+.mes[is_user="true"] .mes_block::before {
+  content: var(--wx-user-source-label) !important;
+  display: block !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 300 !important;
+  font-size: 0.85rem !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.04em !important;
+  text-align: left !important;
+  margin-top: 32px !important;
+  margin-bottom: 4px !important;
+  order: 91 !important;
+}
+
+.mes[is_user="true"] .mes_block::after {
+  content: var(--wx-user-author) "  " var(--wx-user-tag) !important;
+  display: block !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 900 !important;
+  font-size: 1.2rem !important;
+  color: var(--wx-text-primary) !important;
+  letter-spacing: 0.02em !important;
+  text-align: left !important;
+  margin-bottom: 16px !important;
+  order: 92 !important;
+}
+
+/* --- 4.2.7 最后一条消息间距修复 --- */
+.mes.last_mes .mesAvatarWrapper {
+  padding-bottom: 5px !important;
+}
+
+/* --- 4.2.8 系统消息样式 --- */
+.mes[is_system="true"] {
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  padding: 20px var(--wx-card-padding-x) !important;
+}
+
+.mes[is_system="true"]::before,
+.mes[is_system="true"]::after {
+  display: none !important;
+}
+
+.mes[is_system="true"] .mes_text {
+  font-size: 0.9rem !important;
+  color: var(--wx-text-secondary) !important;
+  text-align: center !important;
+  padding-bottom: 0 !important;
+}
+
+.mes[is_system="true"] .mes_text::after {
+  display: none !important;
+}
+
+.mes[is_system="true"] .mesAvatarWrapper {
+  display: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 五、滚动条、滑动条与勾选框 =====                                            */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html, body, #chat, .mes_reasoning {
+  scrollbar-width: none !important; /* 兼容 Firefox */
+}
+
+::-webkit-scrollbar-track {
+  display: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+/* --- 滑动条基础设置 --- */
+input[type="range"], input[type="range"]:disabled {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  filter: none;
+  box-shadow: none !important;
+  background: transparent !important;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--wx-text-secondary), var(--SmartThemeBorderColor));
+  border-radius: 2px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--wx-text-secondary), var(--SmartThemeBorderColor));
+  border-radius: 2px;
+  border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8px;
+  width: 20px;
+  height: 20px;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background-color: var(--SmartThemeBodyColor) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background-color: var(--SmartThemeBodyColor) !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+/* --- 勾选框样式 --- */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  background-color: var(--SmartThemeShadowColor) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.6 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6 68.6-141.3C270.3 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2-20.3-119.7c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1-118.3-17.4c-7.9-1.2-14.6-6.1-18.1-13.3L287.9 79z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.6 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6 68.6-141.3C270.3 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2-20.3-119.7c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1-118.3-17.4c-7.9-1.2-14.6-6.1-18.1-13.3L287.9 79z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+input[type="checkbox"]::before,
+input[type="checkbox"]:checked::before {
+  display: none !important;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--SmartThemeBodyColor) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='black' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E");
+}
+
+#left-nav-panel input[type="checkbox"],
+#leftNavPanel input[type="checkbox"],
+.left-panel input[type="checkbox"],
+#left-nav-panel input[type="radio"],
+#leftNavPanel input[type="radio"],
+.left-panel input[type="radio"] {
+    background-color: var(--SmartThemeShadowColor) !important;
+}
+
+#left-nav-panel input[type="checkbox"]:checked,
+#leftNavPanel input[type="checkbox"]:checked,
+.left-panel input[type="checkbox"]:checked,
+#left-nav-panel input[type="radio"]:checked,
+#leftNavPanel input[type="radio"]:checked,
+.left-panel input[type="radio"]:checked {
+    background-color: var(--SmartThemeBodyColor) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 六、输入框提示文字自定义 =====                                               */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#nonQRFormItems {
+  position: relative;
+}
+
+#send_textarea::placeholder {
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+#nonQRFormItems:has(#send_textarea:placeholder-shown)::before {
+  content: var(--自定义输入框文字);
+  color: var(--wx-text-secondary);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--wx-font-serif) !important;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 七、正则+脚本易读+防误触 =====                                               */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#saved_regex_scripts,
+#saved_scoped_scripts,
+#saved_preset_scripts,
+#global-script-list,
+#character-script-list {
+  margin-right: 80px !important;
+}
+
+.regex-script-label.flex-container,
+.flex-container .script-item {
+  flex-wrap: wrap !important;
+  padding: 12px 16px;
+  border-radius: var(--wx-card-radius);
+  margin-bottom: 8px;
+  background: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  box-shadow: 0 2px 8px var(--SmartThemeShadowColor);
+  transition: box-shadow 0.2s ease;
+}
+
+.regex-script-label.flex-container:hover,
+.flex-container .script-item:hover {
+  box-shadow: 0 4px 12px var(--SmartThemeShadowColor);
+}
+
+.regex-script-label.flex-container .regex_script_name,
+.script-item .script-item-name {
+  flex-basis: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--wx-text-primary);
+  letter-spacing: 0.02em;
+}
+
+.regex-script-label.flex-container > .flex-container.flexnowrap,
+.script-item .script-item-control {
+  width: 100%;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 八、"加载更多消息"美化 =====                                                 */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#show_more_messages {
+  font-size: 0 !important;
+  color: transparent !important;
+  display: block;
+  padding: 12px 24px;
+  margin: 24px auto;
+  width: fit-content;
+  background-color: var(--SmartThemeBlurTintColor);
+  border: 1px solid var(--SmartThemeBorderColor);
+  border-radius: var(--wx-card-radius);
+  box-shadow: 0 4px 12px var(--SmartThemeShadowColor);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#show_more_messages::before {
+  content: var(--自定义加载更多信息文案);
+  font-family: var(--wx-font-serif) !important;
+  font-size: 0.85rem !important;
+  font-weight: 400;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.04em;
+}
+
+#show_more_messages:hover {
+  background-color: var(--SmartThemeBlurTintColor);
+  border-color: var(--SmartThemeBodyColor);
+  box-shadow: 0 8px 20px var(--SmartThemeShadowColor);
+}
+
+#show_more_messages:hover::before {
+  color: var(--SmartThemeBodyColor) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 九、思维链美化 =====                                                        */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+.mes .mes_text .mes_reasoning_details {
+  order: 80 !important;
+  margin-top: 48px !important;
+  width: 100% !important;
+}
+
+.mes_reasoning_summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+}
+
+.mes_reasoning_header {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  transition: opacity 0.2s ease-in-out;
+  display: flex;
+  align-items: flex-start;
+}
+
+.mes_reasoning_summary:hover .mes_reasoning_header {
+  opacity: 0.7;
+}
+
+.mes_reasoning_arrow {
+  display: none !important;
+}
+
+.mes_reasoning_header_title {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  font-size: 0 !important;
+}
+
+.mes_reasoning_header_title::before {
+  content: var(--wx-reasoning-quote);
+  font-family: var(--wx-font-serif) !important;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--wx-text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.mes_reasoning_header_title::after {
+  content: var(--wx-reasoning-author);
+  font-family: var(--wx-font-serif) !important;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--wx-text-primary);
+  letter-spacing: 0.02em;
+}
+
+.mes_reasoning {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background-color: var(--SmartThemeBlurTintColor);
+  border-left: 2px solid var(--SmartThemeBorderColor);
+  border-radius: 0 var(--wx-card-radius) var(--wx-card-radius) 0;
+  font-family: var(--wx-font-content) !important;
+  font-size: 0.9rem;
+  line-height: 2;
+  color: var(--wx-text-secondary);
+  letter-spacing: 0.04em;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十、收藏栏左右滑动查看角色 =====                                             */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+.hotswap.avatars_inline {
+  overflow: auto !important;
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 15px;
+  gap: 12px;
+}
+
+.hotswap.avatars_inline::-webkit-scrollbar {
+  display: none;
+}
+
+.hotswap.avatars_inline {
+  scrollbar-width: none;
+}
+
+.hotswap.avatars_inline .avatar {
+  border-radius: 50% !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  box-shadow: 0 2px 8px var(--SmartThemeShadowColor);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hotswap.avatars_inline .avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px var(--SmartThemeShadowColor);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十一、其他补充优化 =====                                                      */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#completion_prompt_manager .completion_prompt_manager_header_advanced span {
+  filter: none !important;
+}
+
+.completion_prompt_manager_header {
+  color: var(--SmartThemeBodyColor) !important;
+}
+
+.completion_prompt_manager_prompt:not(.completion_prompt_manager_prompt_disabled) {
+    border: 1px solid var(--SmartThemeBodyColor) !important;
+    border-radius: 4px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十二、左侧边栏预设条目优化 =====                                               */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+#clickSlidersTips {
+    position: static !important;
+    margin-bottom: 10px !important;
+    z-index: 1 !important;
+}
+
+.standoutHeader {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    margin-top: 8px !important;
+}
+
+#left-nav-panel,
+#left-nav-panel *,
+#leftNavPanel,
+#leftNavPanel *,
+.left-panel,
+.left-panel *,
+#nav-toggle-left ~ *,
+[id*="left-nav"],
+[id*="left-nav"] *,
+[class*="left-nav"],
+[class*="left-nav"] * {
+    color: var(--SmartThemeBodyColor) !important;
+    text-shadow: none !important;
+}
+
+#left-nav-panel .preset_list,
+#left-nav-panel .preset_list *,
+#left-nav-panel .preset-list,
+#left-nav-panel .preset-list *,
+#leftNavPanel .preset_list,
+#leftNavPanel .preset_list *,
+.left-panel .preset_list,
+.left-panel .preset_list * {
+    color: var(--SmartThemeBodyColor) !important;
+    text-shadow: none !important;
+}
+
+#left-nav-panel .preset_list .preset_item,
+#left-nav-panel .preset-list .preset-item,
+#leftNavPanel .preset_list .preset_item,
+.left-panel .preset_list .preset_item {
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    margin: 1px 0 !important;
+    padding: 3px 8px !important;
+    text-shadow: none !important;
+}
+
+#left-nav-panel .preset_list .preset_item:hover,
+#left-nav-panel .preset-list .preset-item:hover,
+#leftNavPanel .preset_list .preset_item:hover,
+.left-panel .preset_list .preset_item:hover {
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    border-color: var(--SmartThemeBodyColor) !important;
+}
+
+#left-nav-panel .preset_list .preset_item.selected,
+#left-nav-panel .preset_list .preset_item.active,
+#left-nav-panel .preset-list .preset-item:active,
+#leftNavPanel .preset_list .preset_item.selected,
+.left-panel .preset_list .preset_item.selected {
+    background-color: var(--SmartThemeChatTintColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    font-weight: bold !important;
+    border-color: var(--SmartThemeBodyColor) !important;
+    outline: 1px solid var(--SmartThemeBodyColor) !important;
+    outline-offset: 1px !important;
+}
+
+#left-nav-panel table,
+#left-nav-panel table *,
+#left-nav-panel tbody,
+#left-nav-panel tbody *,
+#leftNavPanel table,
+#leftNavPanel table *,
+.left-panel table,
+.left-panel table * {
+    color: var(--SmartThemeBodyColor) !important;
+    text-shadow: none !important;
+}
+
+#left-nav-panel a,
+#left-nav-panel button,
+#left-nav-panel span,
+#left-nav-panel div,
+#leftNavPanel a,
+#leftNavPanel button,
+#leftNavPanel span,
+#leftNavPanel div,
+.left-panel a,
+.left-panel button,
+.left-panel span,
+.left-panel div {
+    color: var(--SmartThemeBodyColor) !important;
+    text-shadow: none !important;
+}
+
+#left-nav-panel input,
+#left-nav-panel textarea,
+#left-nav-panel select,
+#leftNavPanel input,
+#leftNavPanel textarea,
+#leftNavPanel select,
+.left-panel input,
+.left-panel textarea,
+.left-panel select {
+    color: var(--SmartThemeBodyColor) !important;
+    background-color: transparent !important;
+}
+
+.sidebar-left,
+.sidebar-left *,
+.nav-left,
+.nav-left *,
+.panel-left,
+.panel-left * {
+    color: var(--SmartThemeBodyColor) !important;
+    text-shadow: none !important;
+}
+
+.sidebar-left .preset-item,
+.nav-left .preset-item,
+#left-nav-panel .preset-item {
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    border-radius: 3px !important;
+    margin: 2px 0 !important;
+    padding: 4px 6px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十三、扩展面板/设置区/多选标签优化 =====                                        */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+.inline-drawer-toggle,
+.standoutHeader,
+.extension_button,
+#user-settings-block h4,
+.inline-drawer-header {
+    background-image: none !important;
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px var(--SmartThemeShadowColor) !important;
+}
+
+.inline-drawer-toggle:hover,
+.extension_button:hover {
+    border-color: var(--SmartThemeBodyColor) !important;
+    box-shadow: 0 0 8px var(--SmartThemeShadowColor) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-image: none !important;
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    color: var(--SmartThemeBodyColor) !important;
+    border-radius: 8px !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+    background-image: none !important;
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    border-radius: 12px !important;
+}
+
+.select2-container--default.select2-container--open .select2-selection--multiple {
+    border-color: var(--SmartThemeBodyColor) !important;
+    box-shadow: 0 0 8px var(--SmartThemeShadowColor) !important;
+}
+
+/* --- 下拉单选框与内联抽屉面板去灰底优化 --- */
+.select2-container--default .select2-selection--single {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  border-radius: 8px !important;
+  color: var(--SmartThemeBodyColor) !important;
+  height: auto !important;
+  min-height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--SmartThemeBodyColor) !important;
+  line-height: normal !important;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--SmartThemeBodyColor) !important;
+  box-shadow: 0 0 8px var(--SmartThemeShadowColor) !important;
+}
+
+.inline-drawer-content {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  margin-top: 8px !important;
+  box-shadow: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十四、翻页按钮美化 =====                                                     */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* 0. 先把所有旧伪元素内容强制归零，清除历史残留 */
+.mes[is_user="false"] .swipe_left::before,
+.mes[is_user="false"] .swipe_left::after,
+.mes[is_user="false"] .swipe_right::before,
+.mes[is_user="false"] .swipe_right::after {
+  content: none !important;
+}
+
+/* 1. 隐藏原生箭头图标，保留按钮本体可点击 */
+.mes[is_user="false"] .swipe_left i,
+.mes[is_user="false"] .swipe_right i {
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+/* 2. 左翻页注入文字 */
+.mes[is_user="false"] .swipe_left::before {
+  content: '◂✦' !important;
+  font-family: var(--wx-font-serif) !important;
+  font-size: 13px !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.05em;
+  transition: color 0.8s ease;
+  white-space: nowrap;
+}
+
+/* 3. 右翻页注入文字 */
+.mes[is_user="false"] .swipe_right::before {
+  content: '✦▸' !important;
+  font-family: var(--wx-font-serif) !important;
+  font-size: 13px !important;
+  color: var(--wx-text-secondary) !important;
+  letter-spacing: 0.05em;
+  transition: color 0.8s ease;
+  white-space: nowrap;
+}
+
+/* 4. 悬停点亮 */
+.mes[is_user="false"] .swipe_left:hover::before,
+.mes[is_user="false"] .swipe_right:hover::before {
+  color: var(--wx-text-primary) !important;
+}
+
+/* 左/右翻页文字·单独微调高度 */
+.mes[is_user="false"] .swipe_left::before,
+.mes[is_user="false"] .swipe_right::before {
+  display: inline-block !important;
+  position: relative !important;
+  top: 4px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+/* ===== 十五、最后一条卡片加宽与翻页控件悬停交互 =====                                  */
+/* ═══════════════════════════════════════════════════════════════════════════════ */
+
+.mes.last_mes .mes_block {
+  padding-bottom: 80px !important;
+}
+
+.mes.last_mes .mesAvatarWrapper {
+  padding-bottom: calc(var(--wx-card-padding-y) + 20px) !important;
+}
+
+.mes .swipe_left,
+.mes .swipe_right,
+.mes .swipes-counter {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease, color 0.8s ease !important;
+}
+
+.mes:hover .swipe_left,
+.mes:hover .swipe_right,
+.mes:hover .swipes-counter {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：Prompt Manager 列表字体 UI 化 =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * 🖊️MODIFIED: 针对提示词管理器列表项（如 World Info、Author's Note 等），
+ * 强制使用 UI 字体（var(--wx-font-serif)），使其与系统控制区保持一致，
+ * 避免继承正文使用的艺术字体导致难以阅读。
+ */
+.completion_prompt_manager_prompt,
+.completion_prompt_manager_prompt a,
+.completion_prompt_manager_prompt span:not([class*="fa-"]) {
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important; /* 移除正文可能带来的宽字距 */
+}
+
+/*
+ * 🖊️MODIFIED: 增加图标保护层。
+ * 确保该容器内所有带有 "fa-" 的类名依然使用 FontAwesome 字体，
+ * 防止因字体强制覆盖导致图标变成方块或乱码。
+ */
+.completion_prompt_manager_prompt [class*="fa-"] {
+  font-family: "Font Awesome 6 Free" !important;
+}
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：全局输入框与选择框字体 UI 化 =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：全图表单元素（输入框/下拉框）字体 UI 化 =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * 🖊️MODIFIED: 针对所有文本输入框、多行文本区域、原生下拉选择框，
+ * 强制应用 UI 字体 var(--wx-font-serif)，修复浏览器表单不继承父级字体的问题，
+ * 确保角色描述、聊天风格等处的字体与全局 UI 保持一致。
+ */
+input:not(input[type="range"], input[type='checkbox'], input[type='radio']),
+select,
+textarea,
+.text_pole {
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/*
+ * 🖊️MODIFIED: 针对 Select2 插件生成的精美下拉框（如前文的提示词预设选择、API选择等）。
+ * 将其选中后显示的文字，以及点开后展开的下拉列表文字，全部统一为 UI 字体。
+ */
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2-container--default .select2-selection--multiple .select2-selection__choice,
+.select2-results__option {
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.05em !important;
+}
+
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：正文段落首行空两格（传统中文排版） =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * 🖊️MODIFIED: 针对聊天气泡内的普通段落（p），
+ * 增加 text-indent: 2em 属性，实现首行缩进两个中文字符宽度的效果，
+ * 增强文学阅读的沉浸感与规范性。
+ */
+.mes .mes_text p {
+  font-family: var(--wx-font-content) !important;
+  font-weight: normal !important;
+  font-size: var(--wx-content-font-size) !important;
+  line-height: var(--wx-content-line-height) !important;
+  margin-bottom: var(--wx-content-paragraph-spacing) !important;
+  color: var(--SmartThemeBodyColor) !important;
+  letter-spacing: 0.05em !important;
+  text-indent: 2em !important; /* 首行空两格 */
+}
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：收藏/选中状态角色卡视觉统一 =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * 🖊️MODIFIED: 针对被收藏（is_fav）或被选中（selected）的角色卡片，
+ * 将其外边框颜色和名字颜色强制跟随引用文本颜色（var(--SmartThemeQuoteColor)）。
+ * 消除默认刺眼的颜色，使其融入“文学摘录”的整体高亮色调系。
+ * 本模块类名定位参考自 @undefined_9079。
+ */
+.character_select.entity_block.flex-container.interactable.is_fav,
+#user_avatar_block .bogus_folder_select,
+#user_avatar_block .character_select,
+#user_avatar_block .avatar-container.selected {
+    border-color: var(--SmartThemeQuoteColor) !important;
+    /* 覆盖可能存在的原生高亮轮廓 */
+    outline-color: var(--SmartThemeQuoteColor) !important;
+    box-shadow: 0 0 5px calc(var(--SmartThemeQuoteColor) / 50) !important; /* 可选：增加极微弱的同色光晕 */
+}
+
+/* 强制修改收藏角色卡片的名字颜色 */
+.character_select.entity_block.flex-container.interactable.is_fav .ch_name,
+#user_avatar_block .character_select .ch_name {
+    color: var(--SmartThemeQuoteColor) !important;
+    font-weight: bold !important;
+}
+
+/* 确保收藏小星星图标（如果有显示的话）也使用同色系 */
+.character_select.is_fav .ch_fav_icon {
+    color: var(--SmartThemeQuoteColor) !important;
+}
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * ===== 附加优化：全局通知器（Toast）文学化重构 (修复版2.0：卡片两侧星芒) =====
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/*
+ * 🖊️MODIFIED: 修复进度条消失与弹窗卡死问题，并修正星芒位置。
+ * 1. 恢复标准盒模型，移除破坏 toastr.js 生命周期的 flex 强制干预。
+ * 2. 增加 relative 定位，为两侧的绝对定位星芒提供锚点。
+ * 3. 加大左右 padding，防止文字与两侧星芒重叠。
+ * 参考自：用户提供 的基础吐司逻辑框架。
+ */
+#toast-container > .toast,
+#toast-container > .toast-success,
+#toast-container > .toast-error,
+#toast-container > .toast-info,
+#toast-container > .toast-warning {
+  position: relative !important; /* 核心：为星芒的绝对定位提供基础 */
+  background-image: none !important;
+  background-color: var(--SmartThemeBlurTintColor) !important;
+  color: var(--SmartThemeBodyColor) !important;
+  border: 1px solid var(--SmartThemeBorderColor) !important;
+  border-radius: var(--wx-card-radius) !important;
+  box-shadow: 0 4px 12px var(--SmartThemeShadowColor) !important;
+  /* 上下15px，左右40px（给星星留出足够空间） */
+  padding: 15px 40px 15px 40px !important;
+  text-align: center !important;
+  font-family: var(--wx-font-serif) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/*
+ * 🖊️MODIFIED: 彻底重构星芒的定位方式。
+ * 放弃行内排版，改用绝对定位，将星芒牢牢“钉”在卡片的左右两侧垂直居中位置。
+ */
+#toast-container > .toast::before {
+  content: '✧' !important;
+  position: absolute !important;
+  left: 15px !important; /* 固定在距离左侧15px处 */
+  top: 50% !important;
+  transform: translateY(-50%) !important; /* 完美的垂直居中 */
+  font-family: sans-serif !important;
+  font-size: 14px !important;
+  color: var(--wx-text-secondary) !important;
+  pointer-events: none !important; /* 防止遮挡点击 */
+}
+
+#toast-container > .toast::after {
+  content: '✧' !important;
+  position: absolute !important;
+  right: 15px !important; /* 固定在距离右侧15px处 */
+  top: 50% !important;
+  transform: translateY(-50%) !important; /* 完美的垂直居中 */
+  font-family: sans-serif !important;
+  font-size: 14px !important;
+  color: var(--wx-text-secondary) !important;
+  pointer-events: none !important; /* 防止遮挡点击 */
+}
+
+/*
+ * 🖊️MODIFIED: 保留进度条并重塑其视觉表现。
+ * 将原版粗重的彩色进度条，转化为底部一条静谧、纤细的主题色细线（2px）。
+ */
+#toast-container > .toast .toast-progress {
+  display: block !important;
+  height: 2px !important;
+  background-color: var(--SmartThemeBodyColor) !important;
+  opacity: 0.25 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * 🖊️MODIFIED: 优化外部 HTML 组件防御性沙箱补丁，移除导致“压缩感”的强制行高覆盖。
+ * 只重置 white-space 处理多余空行，将 line-height 和 letter-spacing 的控制权
+ * 彻底交还给组件自带的 CSS，恢复排版的呼吸感。
+ * 参考自 用户提供 的反馈排查。
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/* 1. 仅撤销强制换行（吃掉 HTML 源码排版产生的空行），不覆盖行高和字距 */
+.mes .mes_text div,
+.mes .mes_text table {
+  white-space: normal !important;
+}
+
+/* 2. 确保组件容器内部的标题、块级元素不受外部强制内外边距影响 */
+.mes .mes_text div > h1,
+.mes .mes_text div > h2,
+.mes .mes_text div > h3,
+.mes .mes_text div > div {
+  margin-top: unset;
+  margin-bottom: unset;
+}
+
+/* 3. 防止 flex 拉伸继承，确保组件能按照自己的 CSS 设定宽度和高度 */
+.mes .mes_text > div[class] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 4. 安全兜底：如果外部组件显式声明了 flex 布局，予以绝对保护 */
+.mes .mes_text div[style*="display: flex"],
+.mes .mes_text div[class*="flex"] {
+  display: flex !important;
+}
+
