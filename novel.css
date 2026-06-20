@@ -85,7 +85,7 @@ body.no-blur .mes {
 body.bubblechat {
   .mes {
     box-shadow: 0 0 20px var(--SmartThemeShadowColor);
-    background-image: url('http://www.transparenttextures.com/patterns/blizzard.png'); /* 气泡样式底纹 */
+    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png'); /* 气泡样式底纹 */
   }
   #chat {
     background-color: transparent !important;
