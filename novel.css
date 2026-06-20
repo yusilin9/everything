@@ -85,7 +85,7 @@ body.no-blur .mes {
 body.bubblechat {
   .mes {
     box-shadow: 0 0 20px var(--SmartThemeShadowColor);
-    background-image: url('https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png'); /* 气泡样式底纹 */
+    background-image: url('https://www.transparenttextures.com/patterns/absurdity.png'); /* 气泡样式底纹 */
   }
   #chat {
     background-color: transparent !important;
@@ -1020,6 +1020,31 @@ hr {
   transform: none !important;
 }
 
+/* 世界书面板溢出修复方案 */
+@media screen and (max-width: 768px) {
+  #world_popup {
+    width: 92vw !important; /* 强制宽度为屏幕可见区域宽度的92% */
+    max-width: 92vw !important; /* 再次强调最大宽度限制 */
+    margin: 0 auto !important;
+  }
+}
+
+#WIEntryHeaderTitlesPC {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+#world_popup .flex-container {
+    flex-wrap: wrap !important;
+}
+
+body.no-blur .select2-dropdown, .select2-dropdown {
+    background-color: var(--SmartThemeBlurTintColor) !important;
+    backdrop-filter: blur(var(--模糊强度)) !important;
+    border: 1px solid var(--SmartThemeBorderColor) !important;
+    border-radius: 0px !important;
+}
+
 /* 最近聊天初始界面 */
 .welcomePanel {
   background-color: rgba(255, 255, 255, 0.7);
@@ -1053,74 +1078,6 @@ p {
   margin-bottom: 20px !important; /* 段距 */
 }
 
-/* 感谢柏柏老师的世界书布局设计参考 */
-@media screen and (max-width: 700px) {
-
-    .wi-card-entry .inline-drawer-header:not(.world_entry .inline-drawer-header-pointer) {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto auto minmax(0, 1fr) 30px !important;
-        grid-template-rows: auto auto auto !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        column-gap: 10px !important;
-    }
-
-    .wi-card-entry input.text_pole,
-    .wi-card-entry select.text_pole,
-    .wi-card-entry .WIEntryTitleAndStatus > .flex-container {
-        width: 100% !important;
-        min-width: 0 !important;
-        box-sizing: border-box !important;
-    }
-
-    .wi-card-entry .world_entry_thin_controls,
-    .wi-card-entry .world_entry_thin_controls > .alignitemscenter,
-    .wi-card-entry .WIEntryTitleAndStatus,
-    .wi-card-entry .WIEnteryHeaderControls {
-        display: contents !important;
-    }
-
-    .wi-card-entry .WIEntryTitleAndStatus > .flex-container {
-        grid-row: 1;
-        grid-column: 1 / 6;
-    }
-
-    .wi-card-entry select[name="entryStateSelector"] {
-        grid-row: 1;
-        grid-column: 6;
-    }
-
-    .wi-card-entry .drag-handle {
-        grid-row: 1;
-        grid-column: 7;
-        justify-self: center !important;
-        font-size: 17px !important;
-        line-height: 1; 
-        align-self: center;
-    }
-
-    .wi-card-entry div[name="PositionBlock"] {
-        grid-row: 2;
-        grid-column: 1 / 6;
-    }
-
-    .wi-card-entry .WIEnteryHeaderControls > div:has(input[name="depth"]) {
-        grid-row: 2;
-        grid-column: 6;
-    }
-
-    .wi-card-entry .killSwitch {
-        grid-row: 2;
-        grid-column: 7;
-        justify-self: center !important;
-        font-size: 17px !important;
-        align-self: center;
-    }
-
-    .wi-card-entry .WIEnteryHeaderControls > div:has(input[name="order"]) {
-        grid-row: 3;
-        grid-column: 1;
-    }
 
     .wi-card-entry .WIEnteryHeaderControls > div:has(input[name="probability"]) {
         grid-row: 3;
@@ -1206,4 +1163,3 @@ input {
 rounded-\[10px\] {
   border-radius: 0px;
 }
-
