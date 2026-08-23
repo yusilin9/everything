@@ -1641,24 +1641,23 @@ textarea,
 
 /*
  * ═══════════════════════════════════════════════════════════════════════════════
- * ===== 附加优化：正文段落首行空两格（传统中文排版） =====
+ * ===== 附加优化：图标自适应 =====
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/*
- * 🖊️MODIFIED: 针对聊天气泡内的普通段落（p），
- * 增加 text-indent: 2em 属性，实现首行缩进两个中文字符宽度的效果，
- * 增强文学阅读的沉浸感与规范性。
- */
-.mes .mes_text p {
-  font-family: var(--wx-font-content) !important;
-  font-weight: normal !important;
-  font-size: var(--wx-content-font-size) !important;
-  line-height: var(--wx-content-line-height) !important;
-  margin-bottom: var(--wx-content-paragraph-spacing) !important;
-  color: var(--SmartThemeBodyColor) !important;
-  letter-spacing: 0.05em !important;
-  text-indent: 2em !important; /* 首行空两格 */
+/* 图标 */
+.fa, .fa-brands, .fa-classic, .fa-regular, .fa-sharp, .fa-solid:not(.fav_on, .world_set, .fa-power-off, .fa-chevron-right, .fa-chevron-left), .fab, .far, .fas {
+  color: var(--SmartThemeUnderlineColor) !important;
+  font-size: var(--图标大小) !important;
+  filter: none;
+  opacity: 1;
+}
+
+.menu_button {
+  color: var(--SmartThemeUnderlineColor);
+  filter: none;
+  background-color: transparent;
+  box-shadow: none !important;
 }
 /*
  * ═══════════════════════════════════════════════════════════════════════════════
