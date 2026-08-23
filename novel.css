@@ -378,7 +378,7 @@ body.big-avatars.hideChatAvatars .mes .ch_name .alignItemsBaseline {
 
 /* 导航栏图标选中背景色 */
 #top-settings-holder .drawer:has(.openDrawer) {
-  background-color: rgba(197, 197, 197, 0.5);
+  background-color: #0000;
 }
 
 #top-settings-holder .drawer-icon {
